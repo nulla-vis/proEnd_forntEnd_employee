@@ -1,6 +1,6 @@
 
 window.onload = () => {
-
+    feedbackMessage()
     checkAuthorization(localstorage_user)
     initialpageData()
 
@@ -114,7 +114,7 @@ const updateSetting = () => {
 
         
         $('#submitUpdate').on('submit', function(event) {
-            event.preventDefault()
+            // event.preventDefault()
             const id = $('#id').val()
             const status = $('#status').val()
             $.ajax({
@@ -128,10 +128,10 @@ const updateSetting = () => {
 
             sessionStorage.setItem("updatemessage", `オーダーID : ${id} のステータスが更新完了!。`);
 
-            $(function () {
-                $('#updateModal').modal('toggle');
-                feedbackMessage()
-             });
+            // $(function () {
+            //     $('#updateModal').modal('toggle');
+            //     feedbackMessage()
+            //  });
 
         })
 

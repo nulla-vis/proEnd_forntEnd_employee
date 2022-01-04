@@ -43,7 +43,9 @@ const checkAuthorization = (user) => {
     .then( res => {
        
         pageData()
-    } );
+    } ).catch(function () {
+        console.log("Promise Rejected");
+   });
 }
 
 

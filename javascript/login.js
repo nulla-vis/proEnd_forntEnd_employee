@@ -52,7 +52,9 @@ const login = (email, password) => {
         console.log(res)
         // authentication
         authenticate(res)
-    } );
+    } ).catch(function () {
+     console.log("Promise Rejected");
+});
 }
 
 const authenticate = (response) => {

@@ -1,63 +1,85 @@
+const localstorage_user = JSON.parse(localStorage.getItem('user'))
+// options for date
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+// check authorization before accessing the page
+const checkAuthorization = (user) => {
+    if(!user) {
+        location.href = 'login.html';
+    }
+}
+
+checkAuthorization(localstorage_user)
 
 window.onload = () => {
     feedbackMessage()
-    checkAuthorization(localstorage_user)
     initialpageData()
-
 }
-const localstorage_user = JSON.parse(localStorage.getItem('user'))
+
 const socket = io("http://localhost:3000/");
 socket.on('incomingOrder', function(data){
-    buildOrderList(data.order) 
+        document.getElementById("no-order-message").style.display = 'none'
+        buildOrderList(data.order) 
 })
 
 socket.on('getAllOrder', function(data){
-    buildOrderList(data.order)   
+    if(data.message || data.order.every(item => item.status > 1)) {
+        document.getElementById("no-order-message").style.display = 'block'
+    }else {
+        document.getElementById("no-order-message").style.display = 'none'
+        buildOrderList(data.order) 
+    }
 }) 
 
 const setStatus = (orderStatus) => {
     switch(orderStatus) {
         case 0:
             orderStatus = '料理中';
+            badge = 'badge badge-primary'
             break;
         case 1:
             orderStatus = 'ご注文はすぐに配達されます'
+            badge = 'badge badge-info'
             break;
         case 2:
             orderStatus = '注文が届け完了'
+            badge = 'badge badge-success'
             break 
         case 3:
             orderStatus = 'ご注文はキャンセルされました'
+            badge = 'badge badge-danger'
             break;   
     }
 
-    return orderStatus
+    return {orderStatus: orderStatus, badge: badge}
 }
 
 
 const buildOrderList = (order_data) => {
     let all_order = ""
-    let order_status = ""
     for(order of order_data) {
-        order_status = setStatus(order.status)
-        all_order +=`
-        <div class="card" style="width: 18rem; margin: 20px 15px;">
-            <img src="${order.menu_image}" class="card-img-top" alt="${order.menu_title}" style="width: 100%; border: 1px solid rgba(0,0,0,.125); height: 160px">
-            <div class="card-body" style="max-height: 55px">
-                <h5 class="card-title" style="text-align: center">${order.menu_title}</h5>
+        if(order.status <= 2) {
+            const data_date = new Date(order.createdAt)
+            all_order +=`
+            <div class="card" style="width: 18rem; margin: 20px 15px;">
+                <img src="${order.menu_image}" class="card-img-top" alt="${order.menu_title}" style="width: 100%; border: 1px solid rgba(0,0,0,.125); height: 160px">
+                <div class="card-body" style="max-height: 55px">
+                    <h5 class="card-title" style="text-align: center">${order.menu_title}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">オーダーID : ${order.id}</li>
+                    <li class="list-group-item">数量 : ${order.amount}</li>
+                    <li class="list-group-item">テーブル番号 : ${order.table_number}</li>
+                    <li class="list-group-item">日時 : <p style="text-align:center;">${data_date.toLocaleDateString('ja-JP', options)} ${data_date.toLocaleTimeString('ja-JP')}</p></li>
+                    <li class="list-group-item">ステータス : <h5 style="text-align:center;"><span class="${setStatus(order.status).badge}">${setStatus(order.status).orderStatus}</span></h5></li>
+                </ul>
+                <div class="card-body" style="text-align: center;">
+                    <a href="" class="badge badge-pill badge-info updateOrder" id="updateOrder" style="margin: 0px 20px;" data-toggle="modal" data-target="#updateModal" data-id="${order.id}">更新</a>
+                    <a href="" class="badge badge-pill badge-danger deleteOrder" id="deleteOrder" style="margin: 0px 20px;">削除</a>
+              </div>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">オーダーID : ${order.id}</li>
-                <li class="list-group-item">数量 : ${order.amount}</li>
-                <li class="list-group-item">テーブル番号 : ${order.table_number}</li>
-                <li class="list-group-item">ステータス : ${order_status}</li>
-            </ul>
-            <div class="card-body" style="text-align: center;">
-                <a href="" class="badge badge-pill badge-info updateOrder" id="updateOrder" style="margin: 0px 20px;" data-toggle="modal" data-target="#updateModal" data-id="${order.id}">更新</a>
-                <a href="" class="badge badge-pill badge-danger deleteOrder" id="deleteOrder" style="margin: 0px 20px;">削除</a>
-          </div>
-        </div>
-        `
+            `
+        }
     }
 
     document.querySelector('#showAllOrder').innerHTML = all_order
@@ -66,12 +88,6 @@ const buildOrderList = (order_data) => {
 
 }
 
-
-const checkAuthorization = (user) => {
-    if(!user) {
-        location.href = 'login.html';
-    }
-}
 
 const initialpageData = () => {
     document.querySelector('.userName').textContent = localstorage_user.username.charAt(0).toUpperCase() + localstorage_user.username.slice(1)
@@ -90,9 +106,8 @@ const initialpageData = () => {
 }
 
 const feedbackMessage = () => {
-    if(sessionStorage.getItem("updatemessage") !== null) {
+    if(sessionStorage.getItem("updateMessage") !== null) {
         let feedbackMessage = document.getElementById('alert-message')
-        console.log(sessionStorage.getItem("updatemessage"))
         feedbackMessage.style.display = 'block'
         setTimeout(function() {
             feedbackMessage.style.display = 'none'
@@ -126,7 +141,7 @@ const updateSetting = () => {
                 }
             })
 
-            sessionStorage.setItem("updatemessage", `オーダーID : ${id} のステータスが更新完了!。`);
+            sessionStorage.setItem("updateMessage", `オーダーID : ${id} のステータスが更新完了!。`);
 
             // $(function () {
             //     $('#updateModal').modal('toggle');

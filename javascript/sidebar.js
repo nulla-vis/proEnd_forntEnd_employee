@@ -12,7 +12,7 @@ const adminSideBar = () => {
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <i class="fas fa-utensils"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Contactless Admin</div>
     </a>
@@ -51,13 +51,21 @@ const adminSideBar = () => {
 
     <li class="nav-item" id="incomingOrderNav">
         <a class="nav-link" href="incomingOrder.html">
-        <i class="fas fa-utensils"></i>
+        <i class="fas fa-concierge-bell"></i>
             <span>入ってくる注文</span></a>
     </li>
-    <li class="nav-item" id="orderHistoryNav">
-        <a class="nav-link" href="orderHistory.html">
-        <i class="fas fa-list-ul"></i>
-            <span>注文の履歴</span></a>
+    <li class="nav-item" id="orderHistory">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#orderHistory"
+            aria-expanded="true" aria-controls="orderHistory">
+            <i class="fas fa-list-ul"></i>
+            <span>注文履歴</span>
+        </a>
+        <div id="orderHistory" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="orderDetailHistory.html">注文詳細一覧</a>
+                <a class="collapse-item" href="orderHistory.html">注文一覧</a>
+            </div>
+        </div>
     </li>
 
     <!-- Divider -->
@@ -66,13 +74,13 @@ const adminSideBar = () => {
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMenu"
             aria-expanded="true" aria-controls="collapseMenu">
-            <i class="fas fa-utensils"></i>
-            <span>注文</span>
+            <i class="fas fa-list-ul"></i>
+            <span>注文履歴</span>
         </a>
         <div id="collapseMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="incomingOrder.html">入ってくる注文</a>
-                <a class="collapse-item" href="orderHistory.html">注文の履歴</a>
+                <a class="collapse-item" href="incomingOrder.html">注文詳細一覧</a>
+                <a class="collapse-item" href="orderHistory.html">注文一覧</a>
             </div>
         </div>
     </li>

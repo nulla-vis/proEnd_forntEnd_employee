@@ -54,7 +54,7 @@ const login = (email, password) => {
         authenticate(res)
     } ).catch(function () {
      console.log("Promise Rejected");
-});
+    });
 }
 
 const authenticate = (response) => {

@@ -41,7 +41,6 @@ const checkAuthorization = (user) => {
         },
     }).then( res => res.json() )
     .then( res => {
-       
         pageData()
     } ).catch(function () {
         console.log("Promise Rejected");

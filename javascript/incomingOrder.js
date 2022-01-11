@@ -102,7 +102,6 @@ const initialpageData = () => {
         location.href = 'login.html';
     })
 
-
 }
 
 const feedbackMessage = () => {

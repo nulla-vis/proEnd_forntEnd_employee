@@ -75,7 +75,7 @@ const buildOrderList = (order_data) => {
                 </ul>
                 <div class="card-body" style="text-align: center;">
                     <a href="" class="badge badge-pill badge-info updateOrder" id="updateOrder" style="margin: 0px 20px;" data-toggle="modal" data-target="#updateModal" data-id="${order.id}">更新</a>
-                    <a href="" class="badge badge-pill badge-danger deleteOrder" id="deleteOrder" style="margin: 0px 20px;">削除</a>
+                    <a href="" class="badge badge-pill badge-danger deleteOrder" id="deleteOrder" style="margin: 0px 20px;" data-toggle="modal" data-target="#deleteModal" data-id="${order.id}">削除</a>
               </div>
             </div>
             `
@@ -113,6 +113,15 @@ const feedbackMessage = () => {
         },3500)
         sessionStorage.clear()
     }
+    if(sessionStorage.getItem("deleteMessage") !== null) {
+        let feedbackMessage = document.getElementById('alert-message')
+        feedbackMessage.textContent = sessionStorage.getItem("deleteMessage")
+        feedbackMessage.style.display = 'block'
+        setTimeout(function() {
+            feedbackMessage.style.display = 'none'
+        },3500)
+        sessionStorage.clear()
+    }
 }
 
 
@@ -124,6 +133,15 @@ const updateSetting = () => {
             const id = $(this).data('id')
             // change id in hidden input element tag in HTML
             $('#id').val(id)
+        })
+
+        $('.deleteOrder').on('click', function() {
+            
+            const id = $(this).data('id')
+            // change id in hidden input element tag in HTML
+            $('#deleteId').val(id)
+            $('.modalDeleteContent').html(`<h5>オーダーID<span style="color: red;">${id}</span>を削除しますか。</h5>`)
+            
         })
 
         
@@ -147,6 +165,22 @@ const updateSetting = () => {
             //     feedbackMessage()
             //  });
 
+        })
+
+        $('#submitDeleteOrder').on('submit', function(event) {
+            console.log('masuk')
+            // event.preventDefault()
+            const id = $('#deleteId').val()
+            $.ajax({
+                url: 'http://localhost:3000/order/delete',
+                method: 'post',
+                contentType: "application/json",
+                data: JSON.stringify({id : id}),
+                success: function(res) {
+                }
+            })
+
+            sessionStorage.setItem("deleteMessage", `オーダーID : ${id} 削除しました。`);
         })
 
         

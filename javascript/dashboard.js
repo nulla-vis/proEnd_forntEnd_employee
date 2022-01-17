@@ -1,17 +1,5 @@
 const localstorage_user = JSON.parse(localStorage.getItem('user'))
 
-
-
-window.onload = () => {
-    document.querySelector('.userName').textContent = localstorage_user.username.charAt(0).toUpperCase() + localstorage_user.username.slice(1)
-
-    let activeClass = document.getElementsByClassName('active');
-    while (activeClass.length) activeClass[0].classList.remove('active');
-    document.querySelector('#dashboardNav').classList.add('active')
-
-    checkAuthorization(localstorage_user)
-}
-
 const checkAuthorization = (user) => {
     if(!user) {
         location.href = 'login.html';
@@ -62,6 +50,19 @@ const pageData = () => {
     })
 }
 
+
+checkAuthorization(localstorage_user)
+
+
+window.onload = () => {
+
+    document.querySelector('.userName').textContent = localstorage_user.username.charAt(0).toUpperCase() + localstorage_user.username.slice(1)
+
+    let activeClass = document.getElementsByClassName('active');
+    while (activeClass.length) activeClass[0].classList.remove('active');
+    document.querySelector('#dashboardNav').classList.add('active')
+
+}
 
 // Generate page for admin
 const adminPage = () => {

@@ -2,7 +2,7 @@ const localstorage_user = JSON.parse(localStorage.getItem('user'))
 
 // check authorization before accessing the page
 const checkAuthorization = (user) => {
-    if(!user) {
+    if(!user || user.roles[0] !==  'ROLE_ADMIN') {
         location.href = 'login.html';
     }
 }

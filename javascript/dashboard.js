@@ -83,7 +83,7 @@ const getAllOrderhistrory = () => {
             buildLineChart(data)
         },
         error: function(errorThrown) {
-            alert(errorThrown)
+            console.log(errorThrown)
         }
     })
 }
